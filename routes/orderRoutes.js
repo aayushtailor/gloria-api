@@ -1,32 +1,27 @@
-import { Router } from "express";
-import Order from "../models/Order.js";
+const express = require("express");
+const Order = require("../models/Order.js");
 
-const router = Router();
+const router = express.Router();
 
-// GET all orders (for admin)
+// Get all orders
 router.get("/", async (req, res) => {
-  const orders = await Order.find().sort({ createdAt: -1 });
-  res.json(orders);
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Create order (from storefront)
+// Place new order
 router.post("/", async (req, res) => {
-  const order = await Order.create(req.body);
-  res.json(order);
+  try {
+    const order = new Order(req.body);
+    await order.save();
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
-// Update order status
-router.put("/:id", async (req, res) => {
-  const updated = await Order.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json(updated);
-});
-
-// Delete order
-router.delete("/:id", async (req, res) => {
-  await Order.findByIdAndDelete(req.params.id);
-  res.json({ message: "Order deleted" });
-});
-
-export default router;
+module.exports = router;
