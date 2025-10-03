@@ -1,32 +1,27 @@
-import { Router } from "express";
-import Customer from "../models/Customer.js";
+const express = require("express");
+const Customer = require("../models/Customer.js");
 
-const router = Router();
+const router = express.Router();
 
-// GET all customers
+// Get all customers
 router.get("/", async (req, res) => {
-  const customers = await Customer.find().sort({ createdAt: -1 });
-  res.json(customers);
+  try {
+    const customers = await Customer.find();
+    res.json(customers);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Add customer
+// Register new customer
 router.post("/", async (req, res) => {
-  const customer = await Customer.create(req.body);
-  res.json(customer);
+  try {
+    const customer = new Customer(req.body);
+    await customer.save();
+    res.json(customer);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
-// Update customer
-router.put("/:id", async (req, res) => {
-  const updated = await Customer.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json(updated);
-});
-
-// Delete customer
-router.delete("/:id", async (req, res) => {
-  await Customer.findByIdAndDelete(req.params.id);
-  res.json({ message: "Customer deleted" });
-});
-
-export default router;
+module.exports = router;
