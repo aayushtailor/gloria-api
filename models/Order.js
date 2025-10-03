@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-  customerName: String,
-  email: String,
-  phone: String,
-  address: String,
-  paymentMethod: String,
+  customerName: { type: String, required: true },
+  email: { type: String },
+  phone: { type: String },
+  address: { type: String },
+  paymentMethod: { type: String },
   items: [
     {
       name: String,
@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema({
       image: String
     }
   ],
-  total: Number
+  total: { type: Number }
 }, { timestamps: true });
 
 const Order = mongoose.model("Order", orderSchema);
