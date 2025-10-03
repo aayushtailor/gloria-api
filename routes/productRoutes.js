@@ -1,9 +1,9 @@
-import express from "express";
-import Product from "../models/Product.js"; // assuming mongoose
+const express = require("express");
+const Product = require("../models/Product.js"); // mongoose model
 
 const router = express.Router();
 
-// ✅ Get all products
+// Get all products
 router.get("/", async (req, res) => {
   try {
     const products = await Product.find();
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ✅ Get product by ID
+// Get product by ID
 router.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -24,7 +24,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ✅ Add product
+// Add product
 router.post("/", async (req, res) => {
   try {
     const { name, price, stock, description, imageUrl } = req.body;
@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// ✅ Update product
+// Update product
 router.put("/:id", async (req, res) => {
   try {
     const { name, price, stock, description, imageUrl } = req.body;
@@ -51,7 +51,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ✅ Delete product
+// Delete product
 router.delete("/:id", async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
@@ -61,4 +61,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
